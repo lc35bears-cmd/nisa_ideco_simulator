@@ -44,7 +44,7 @@ export const Short: React.FC<ShortProps> = ({headline, image, audio, lines}) => 
         <PanningArt src={image} durationInFrames={durationInFrames} />
       </FadeEdges>
       <Headline text={headline} fontSize={96} top={110} />
-      <Captions lines={lines} fontSize={66} bottom={300} maxWidth="92%" />
+      <Captions lines={lines} fontSize={62} bottom={200} maxWidth="94%" />
       <Audio src={staticFile(audio)} />
     </AbsoluteFill>
   );

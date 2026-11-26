@@ -86,6 +86,9 @@ export const Captions: React.FC<{lines: Line[]; fontSize: number; bottom: number
           textAlign: 'center',
           maxWidth,
           padding: '0.2em 0.6em',
+          // 日本語を文節で折り返し、行の長さをそろえる
+          wordBreak: 'auto-phrase' as React.CSSProperties['wordBreak'],
+          textWrap: 'balance',
           WebkitTextStroke: `${fontSize / 7}px #000`,
           paintOrder: 'stroke fill',
           textShadow: '0 4px 14px rgba(0,0,0,0.7)',
