@@ -34,7 +34,7 @@ const jobs = {
   short: async () => {
     const composition = await selectComposition({...common, id: 'Short', inputProps: props.short});
     await renderMedia({
-      ...common, composition, inputProps: props.short, codec: 'h264', crf: 20, concurrency,
+      ...common, composition, inputProps: props.short, codec: 'h264', crf: 24, x264Preset: 'slow', concurrency,
       outputLocation: path.join(job, 'out/short.mp4'),
       onProgress: ({progress}) => process.stdout.write(`\rshort ${(progress * 100).toFixed(0)}%`),
     });
@@ -42,7 +42,7 @@ const jobs = {
   long: async () => {
     const composition = await selectComposition({...common, id: 'Long', inputProps: props.long});
     await renderMedia({
-      ...common, composition, inputProps: props.long, codec: 'h264', crf: 20, concurrency,
+      ...common, composition, inputProps: props.long, codec: 'h264', crf: 24, x264Preset: 'slow', concurrency,
       outputLocation: path.join(job, 'out/long.mp4'),
       onProgress: ({progress}) => process.stdout.write(`\rlong ${(progress * 100).toFixed(0)}%`),
     });

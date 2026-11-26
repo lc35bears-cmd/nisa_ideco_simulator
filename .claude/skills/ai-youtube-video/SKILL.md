@@ -44,7 +44,8 @@ pip install -q pyopenjtalk-plus pyworld numpy
 | `description`, `tags` | 概要欄とタグ。出典とAI利用の表記は自動で足される |
 | `readings` | 読み方の辞書 `{"押送船": ["オシオクリブネ", 5], "石班沢": "カジカザワ"}`（数字はアクセント核の位置、0=平板） |
 | `thumb` | `image`, `focus`, `lines`（大きな文字、1〜2行）, `sub` |
-| `sections[]` | 場面。`image`, `focus`（ズームの中心 0〜1）, `caption`（左上のラベル）, `lines[]` |
+| `sections[]` | 場面。`image`, `focus`（ズームの中心 0〜1）, `caption`（左上のラベル）, `lines[]`, `crop`（任意） |
+| `crop` | `[左, 上, 右, 下]` の割合で切り抜く。美術館の写真は**色見本やものさしが写り込んでいることがある**ので、元画像を縮小して Read で見て、必要なら指定する（`sections` / `short` / `thumb` のどれにも書ける） |
 | `short` | `title`, `headline`, `image`, `lines[]`（6文前後、20秒くらい） |
 
 `lines` は `{"sub": 字幕, "say": 読み上げ文}`。**字幕と読み上げ文は分ける。**

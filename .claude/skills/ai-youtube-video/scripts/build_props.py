@@ -25,7 +25,21 @@ TAIL = 0.8  # 最後の余韻（秒）
 MET = "https://collectionapi.metmuseum.org/public/collection/v1/objects/"
 
 
-def fetch_image(ref, script_dir, job, credits):
+def fetch_image(ref, script_dir, job, credits, crop=None):
+    rel = _fetch_image(ref, script_dir, job, credits)
+    if not crop:
+        return rel
+    # 美術館の写真には色見本やものさしが写り込むことがあるので切り抜く。crop は [左, 上, 右, 下] の割合
+    from PIL import Image
+    im = Image.open(os.path.join(job, rel))
+    w, h = im.size
+    out = rel.replace(".jpg", "_crop.jpg")
+    im.crop((int(crop[0] * w), int(crop[1] * h), int(crop[2] * w), int(crop[3] * h))).convert("RGB").save(
+        os.path.join(job, out), quality=95)
+    return out
+
+
+def _fetch_image(ref, script_dir, job, credits):
     os.makedirs(os.path.join(job, "img"), exist_ok=True)
     if ref.startswith("met:"):
         obj = ref[4:]
@@ -90,7 +104,7 @@ def main(script_path, job):
         "duration": dur,
         "lines": lines,
         "sections": [
-            {"image": fetch_image(s["image"], sdir, job, credits), "focus": s.get("focus", [0.5, 0.5]),
+            {"image": fetch_image(s["image"], sdir, job, credits, s.get("crop")), "focus": s.get("focus", [0.5, 0.5]),
              "caption": s.get("caption", ""), "start": sp[0], "duration": sp[1]}
             for s, sp in zip(secs, spans)
         ],
@@ -99,12 +113,12 @@ def main(script_path, job):
     # Shorts
     sh = sc["short"]
     s_lines, _, s_dur = synth([sh["lines"]], os.path.join(job, "audio/short.wav"))
-    short = {"headline": sh.get("headline", ""), "image": fetch_image(sh["image"], sdir, job, credits),
+    short = {"headline": sh.get("headline", ""), "image": fetch_image(sh["image"], sdir, job, credits, sh.get("crop")),
              "audio": "audio/short.wav", "duration": s_dur, "lines": s_lines}
 
     # サムネイル
     th = sc["thumb"]
-    thumb = {"image": fetch_image(th.get("image", secs[0]["image"]), sdir, job, credits),
+    thumb = {"image": fetch_image(th.get("image", secs[0]["image"]), sdir, job, credits, th.get("crop")),
              "focus": th.get("focus", [0.5, 0.5]), "lines": th["lines"], "sub": th.get("sub", "")}
 
     json.dump({"long": long, "short": short, "thumb": thumb},
